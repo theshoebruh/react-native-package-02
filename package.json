@@ -183,5 +183,10 @@
     "languages": "js",
     "type": "library",
     "version": "0.44.1"
+  },
+  "dependencies": {
+    "d3-shape": "^3.2.0",
+    "react-native-gesture-handler": "^2.21.0",
+    "react-native-svg": "^15.9.0"
   }
 }
