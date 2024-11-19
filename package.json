@@ -1,5 +1,5 @@
 {
-  "name": "react-native-awesome-library",
+  "name": "@theshoebruh/react-native-wunderwheel",
   "version": "0.1.0",
   "description": "an awsome library for react native",
   "source": "./src/index.tsx",
@@ -68,6 +68,7 @@
     "@evilmartians/lefthook": "^1.5.0",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^9.0.2",
+    "@types/d3-shape": "^3.1.6",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
     "commitlint": "^17.0.2",
@@ -185,8 +186,13 @@
     "version": "0.44.1"
   },
   "dependencies": {
+    "@theshoebruh/react-native-wunderwheel": "^0.1.0",
     "d3-shape": "^3.2.0",
     "react-native-gesture-handler": "^2.21.0",
     "react-native-svg": "^15.9.0"
+  },
+  "directories": {
+    "example": "example",
+    "lib": "lib"
   }
 }

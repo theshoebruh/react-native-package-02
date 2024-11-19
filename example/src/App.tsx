@@ -1,4 +1,4 @@
-import WunderWheel from 'react-native-awesome-library';
+import WunderWheel from '@theshoebruh/react-native-wunderwheel';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {

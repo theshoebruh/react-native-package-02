@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-magic-numbers */
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import * as d3Shape from 'd3-shape';
 import {
@@ -15,73 +15,85 @@ import Svg, { G, Path, Text } from 'react-native-svg';
 
 const { width } = Dimensions.get('screen');
 
-const numberOfSegments = 16;
-const wheelSize = width * 0.8;
-const fontSize = 16;
-const oneTurn = 360;
-const angleBySegment = oneTurn / numberOfSegments;
-const angleOffset = angleBySegment / 2;
+// Constants for wheel configuration
+const numberOfSegments = 16; // Total number of segments in the wheel
+const wheelSize = width * 0.8; // Wheel size relative to screen width
+const fontSize = 16; // Font size for segment numbers
+const oneTurn = 360; // Degrees in a full rotation
+const angleBySegment = oneTurn / numberOfSegments; // Degrees per segment
+const angleOffset = angleBySegment / 2; // Offset to center segments
 const knobFill = '#63B3ED';
+const NUMBER_OF_SEGMENTS = numberOfSegments;
+const SEGMENT_ANGLE = 360 / NUMBER_OF_SEGMENTS;
 
+// Interface defining the structure of each wheel segment
 interface WheelSegment {
-  path: string | null;
-  color: string;
-  value: number;
-  centroid: [number, number];
+  path: string | null; // SVG path for the segment
+  color: string | undefined; // Segment color
+  value: string | undefined; // Number/text displayed in segment
+  centroid: [number, number]; // Center point coordinates of segment
 }
 
+// Creates the wheel segments using D3 for SVG path generation
 const makeWheel = (): WheelSegment[] => {
-  const data = Array.from({ length: numberOfSegments }).fill(1);
+  const data = Array.from({ length: numberOfSegments }).fill(1) as number[];
   const arcs = d3Shape.pie()(data);
   const labels = [
-    '2 Wunder', // 0
-    'No luck', // 1
-    '10 Wunder', // 2
-    '4 Wunder', // 3
-    '2 Wunder', // 4
-    'No luck today', // 5
-    '20 Wunder', // 6
-    '2 Wunder', // 7
-    '6 Wunder', // 8
-    'No luck today', // 9
-    '10 Wunder', // 10
-    '4 Wunder', // 11
-    '2 Wunder', // 12
-    'No luck today', // 13
-    '10 Wunder', // 14
-    '4 Wunder', // 15
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
   ];
   const colors = [
     'white',
-    '#ff8040',
-    '#cef187',
     'white',
     'white',
-    '#ff8040',
-    '#9013fe',
     'white',
     'white',
-    '#ff8040',
-    '#cef187',
     'white',
     'white',
-    '#ff8040',
-    '#cef187',
+    'white',
+    'white',
+    'white',
+    'white',
+    'white',
+    'white',
+    'white',
+    'white',
     'white',
   ];
 
-  return arcs.map((arc: any, index: string | number) => {
+  return arcs.map((arc, index) => {
     const instance = d3Shape
       .arc()
       .padAngle(0.01)
       .outerRadius(width / 2)
       .innerRadius(60);
-
     return {
-      path: instance(arc),
+      path: instance({
+        ...arc,
+        innerRadius: 60,
+        outerRadius: width / 2,
+      }),
       color: colors[index as number],
       value: labels[index as number],
-      centroid: instance.centroid(arc) as [number, number],
+      centroid: instance.centroid({
+        ...arc,
+        innerRadius: 60,
+        outerRadius: width / 2,
+      }) as [number, number],
     };
   });
 };
@@ -90,61 +102,63 @@ const makeWheel = (): WheelSegment[] => {
  *
  */
 export default function WunderWheel() {
-  const wheelPaths = useRef(makeWheel()).current;
-  const angleRef = useRef(new Animated.Value(0)).current;
-  const [enabled, setEnabled] = useState(true);
-  const [winner, setWinner] = useState<string | null>(null);
+  // Refs and State
+  const wheelPaths = useRef(makeWheel()).current; // Store wheel segment data
+  const angleRef = useRef(new Animated.Value(0)).current; // Track rotation angle
+  const [enabled, setEnabled] = useState(true); // Enable/disable wheel spinning
+  const [isFinished, setIsFinished] = useState(false); // Track spin completion
+  const [winner, setWinner] = useState<string | null>(null); // Store winning number
+  const [currentRotation, setCurrentRotation] = useState<number>(0); // Current wheel rotation
+  const [winningIndex, setWinningIndex] = useState<number | null>(null); // Index of winning segment
 
+  // Listen for rotation changes and update currentRotation
+  useEffect(() => {
+    const listener = angleRef.addListener((value) => {
+      setCurrentRotation(value.value);
+    });
+    return () => angleRef.removeListener(listener);
+  }, [angleRef]);
+
+  // Calculate winner when spin is finished
+  useEffect(() => {
+    if (isFinished) {
+      // Calculate winning segment based on final rotation
+      const degrees = ((currentRotation % 360) + SEGMENT_ANGLE / 2) % 360;
+      const winningSegmentIndex =
+        (numberOfSegments - Math.floor(degrees / SEGMENT_ANGLE)) %
+        numberOfSegments;
+
+      // Update state with winner
+      setWinner(wheelPaths[winningSegmentIndex]?.value?.toString() || null);
+      setWinningIndex(winningSegmentIndex);
+      setEnabled(true);
+      setIsFinished(false);
+    }
+  }, [isFinished, currentRotation, wheelPaths]);
+
+  // Handle pan gesture for spinning the wheel
   const onPan = ({ nativeEvent }: { nativeEvent: any }) => {
     if (nativeEvent.state === State.END) {
-      const { velocityY } = nativeEvent;
-
+      // Reset states for new spin
       setEnabled(false);
       setWinner(null);
+      setWinningIndex(null);
 
-      const minimumSpins = 2;
-      const velocitySpins = Math.abs(velocityY) / 500;
-      const totalSpins = Math.max(minimumSpins, velocitySpins);
-      const direction = velocityY < 0 ? -1 : 1;
-      const targetAngle = direction * oneTurn * totalSpins;
-
-      Animated.spring(angleRef, {
-        toValue: targetAngle,
-        velocity: velocityY,
-        tension: 15,
-        friction: 8,
+      // Animate the wheel spin using decay animation
+      angleRef.setValue(0);
+      Animated.decay(angleRef, {
+        velocity: nativeEvent.velocityY,
+        deceleration: 0.97,
         useNativeDriver: true,
       }).start(({ finished }) => {
         if (finished) {
-          const finalAngle = angleRef.__getValue();
-
-          // Normalize angle to positive value between 0-360
-          const normalizedAngle = ((finalAngle % oneTurn) + oneTurn) % oneTurn;
-
-          // Calculate segment index
-          const segmentAngle = oneTurn / numberOfSegments;
-          const rawIndex = Math.floor(normalizedAngle / segmentAngle);
-
-          // Since the wheel spins clockwise and pointer is at top,
-          // we need to invert the index and offset it
-          const adjustedIndex =
-            (numberOfSegments - rawIndex) % numberOfSegments;
-
-          console.log({
-            finalAngle,
-            normalizedAngle,
-            segmentAngle,
-            rawIndex,
-            adjustedIndex,
-            winnerValue: wheelPaths[adjustedIndex]?.value,
-          });
-          setEnabled(true);
-          setWinner(wheelPaths[adjustedIndex]?.value?.toString() || null);
+          setIsFinished(true);
         }
       });
     }
   };
 
+  // Render the pointer/knob at top of wheel
   const renderKnob = () => {
     const knobSize = 30;
 
@@ -172,11 +186,12 @@ export default function WunderWheel() {
     );
   };
 
+  // Display the winning number
   const renderWinner = () => {
-    if (!winner) return null;
-    return <RNText>Winner is: {winner}</RNText>;
+    return <RNText>Winner is: {winner || ''}</RNText>;
   };
 
+  // Render the main wheel component with segments
   const renderSvgWheel = () => {
     return (
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -203,24 +218,24 @@ export default function WunderWheel() {
             width={wheelSize}
             height={wheelSize}
             viewBox={`0 0 ${width} ${width}`}
-            style={{ transform: [{ rotate: `-${angleOffset}deg` }] }}>
+            style={{ transform: [{ rotate: `-${angleOffset}deg` }] }}
+          >
             <G y={width / 2} x={width / 2}>
               {wheelPaths.map((arc, i) => {
                 const [x, y] = arc.centroid;
-                const number = arc.value.toString();
+                const number = arc.value?.toString() || '';
+                const isWinningSegment = i === winningIndex;
 
                 return (
                   <G key={`arc-${i}`}>
-                    <Path d={arc.path || ''} fill={arc.color} />
+                    <Path
+                      d={arc.path || ''}
+                      fill={isWinningSegment ? '#63B3ED' : arc.color}
+                    />
                     <Text
                       x={x}
                       y={y + 5}
-                      fill={
-                        wheelPaths[i]?.color === 'white' ||
-                        wheelPaths[i]?.color === '#cef187'
-                          ? 'black'
-                          : 'white'
-                      }
+                      fill={isWinningSegment ? 'white' : 'black'}
                       fontWeight="bold"
                       textAnchor="middle"
                       fontSize={fontSize}
@@ -239,6 +254,7 @@ export default function WunderWheel() {
     );
   };
 
+  // Main render with gesture handler for spinning
   return (
     <PanGestureHandler onHandlerStateChange={onPan} enabled={enabled}>
       <View style={styles.container}>

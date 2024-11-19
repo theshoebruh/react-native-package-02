@@ -3205,6 +3205,39 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@theshoebruh/react-native-wunderwheel@^0.1.0, @theshoebruh/react-native-wunderwheel@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@theshoebruh/react-native-wunderwheel@workspace:."
+  dependencies:
+    "@commitlint/config-conventional": ^17.0.2
+    "@evilmartians/lefthook": ^1.5.0
+    "@react-native/eslint-config": ^0.73.1
+    "@release-it/conventional-changelog": ^9.0.2
+    "@theshoebruh/react-native-wunderwheel": ^0.1.0
+    "@types/d3-shape": ^3.1.6
+    "@types/jest": ^29.5.5
+    "@types/react": ^18.2.44
+    commitlint: ^17.0.2
+    d3-shape: ^3.2.0
+    del-cli: ^5.1.0
+    eslint: ^8.51.0
+    eslint-config-prettier: ^9.0.0
+    eslint-plugin-prettier: ^5.0.1
+    jest: ^29.7.0
+    prettier: ^3.0.3
+    react: 18.3.1
+    react-native: 0.76.2
+    react-native-builder-bob: ^0.32.1
+    react-native-gesture-handler: ^2.21.0
+    react-native-svg: ^15.9.0
+    release-it: ^17.10.0
+    typescript: ^5.2.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  languageName: unknown
+  linkType: soft
+
 "@tootallnate/quickjs-emscripten@npm:^0.23.0":
   version: 0.23.0
   resolution: "@tootallnate/quickjs-emscripten@npm:0.23.0"
@@ -3278,6 +3311,22 @@ __metadata:
   dependencies:
     "@babel/types": ^7.20.7
   checksum: 2bdc65eb62232c2d5c1086adeb0c31e7980e6fd7e50a3483b4a724a1a1029c84d9cb59749cf8de612f9afa2bc14c85b8f50e64e21f8a4398fa77eb9059a4283c
+  languageName: node
+  linkType: hard
+
+"@types/d3-path@npm:*":
+  version: 3.1.0
+  resolution: "@types/d3-path@npm:3.1.0"
+  checksum: 1e81b56ed33ba1ac954a8c42c78c3fcf2716927fe5d01b2003591193ad3b639572a3dfcedd9bf78b6b73215a5cfb01cede8f25c936e95ac18fbe3858f9b62f5c
+  languageName: node
+  linkType: hard
+
+"@types/d3-shape@npm:^3.1.6":
+  version: 3.1.6
+  resolution: "@types/d3-shape@npm:3.1.6"
+  dependencies:
+    "@types/d3-path": "*"
+  checksum: bd765be021019c43c8dca066a798a1de28a051d1213db6ca25f76c9e577da7ec40a592e3bda7628383ab48cb87164fe60b95eb5ec23761b2012bd0adb30c549a
   languageName: node
   linkType: hard
 
@@ -5273,26 +5322,26 @@ __metadata:
   linkType: hard
 
 "cross-spawn@npm:^6.0.0":
-  version: 6.0.5
-  resolution: "cross-spawn@npm:6.0.5"
+  version: 6.0.6
+  resolution: "cross-spawn@npm:6.0.6"
   dependencies:
     nice-try: ^1.0.4
     path-key: ^2.0.1
     semver: ^5.5.0
     shebang-command: ^1.2.0
     which: ^1.2.9
-  checksum: f893bb0d96cd3d5751d04e67145bdddf25f99449531a72e82dcbbd42796bbc8268c1076c6b3ea51d4d455839902804b94bc45dfb37ecbb32ea8e54a6741c3ab9
+  checksum: a6e2e5b04a0e0f806c1df45f92cd079b65f95fbe5a7650ee1ab60318c33a6c156a8a2f8b6898f57764f7363ec599a0625e9855dfa78d52d2d73dbd32eb11c25e
   languageName: node
   linkType: hard
 
 "cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
-  version: 7.0.5
-  resolution: "cross-spawn@npm:7.0.5"
+  version: 7.0.6
+  resolution: "cross-spawn@npm:7.0.6"
   dependencies:
     path-key: ^3.1.0
     shebang-command: ^2.0.0
     which: ^2.0.1
-  checksum: 55c50004cb6bbea3649784caac6e7b8ddd03fa8c1e14dbd5a1f15896708378006eb7526a52a0f48770c768c9b8aed48a5888eb8e785ff59ff7749e74f66cd96b
+  checksum: 8d306efacaf6f3f60e0224c287664093fa9185680b2d195852ba9a863f85d02dcc737094c6e512175f8ee0161f9b87c73c6826034c2422e39de7d6569cf4503b
   languageName: node
   linkType: hard
 
@@ -6913,9 +6962,9 @@ __metadata:
   linkType: hard
 
 "flatted@npm:^3.2.9":
-  version: 3.3.1
-  resolution: "flatted@npm:3.3.1"
-  checksum: 85ae7181650bb728c221e7644cbc9f4bf28bc556f2fc89bb21266962bdf0ce1029cc7acc44bb646cd469d9baac7c317f64e841c4c4c00516afa97320cdac7f94
+  version: 3.3.2
+  resolution: "flatted@npm:3.3.2"
+  checksum: ac3c159742e01d0e860a861164bcfd35bb567ccbebb8a0dd041e61cf3c64a435b917dd1e7ed1c380c2ebca85735fb16644485ec33665bc6aafc3b316aa1eed44
   languageName: node
   linkType: hard
 
@@ -11759,37 +11808,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-awesome-library@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "react-native-awesome-library@workspace:."
-  dependencies:
-    "@commitlint/config-conventional": ^17.0.2
-    "@evilmartians/lefthook": ^1.5.0
-    "@react-native/eslint-config": ^0.73.1
-    "@release-it/conventional-changelog": ^9.0.2
-    "@types/jest": ^29.5.5
-    "@types/react": ^18.2.44
-    commitlint: ^17.0.2
-    d3-shape: ^3.2.0
-    del-cli: ^5.1.0
-    eslint: ^8.51.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-prettier: ^5.0.1
-    jest: ^29.7.0
-    prettier: ^3.0.3
-    react: 18.3.1
-    react-native: 0.76.2
-    react-native-builder-bob: ^0.32.1
-    react-native-gesture-handler: ^2.21.0
-    react-native-svg: ^15.9.0
-    release-it: ^17.10.0
-    typescript: ^5.2.2
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  languageName: unknown
-  linkType: soft
-
 "react-native-builder-bob@npm:^0.32.1":
   version: 0.32.1
   resolution: "react-native-builder-bob@npm:0.32.1"
@@ -11823,8 +11841,8 @@ __metadata:
   linkType: hard
 
 "react-native-gesture-handler@npm:^2.21.0":
-  version: 2.21.0
-  resolution: "react-native-gesture-handler@npm:2.21.0"
+  version: 2.21.1
+  resolution: "react-native-gesture-handler@npm:2.21.1"
   dependencies:
     "@egjs/hammerjs": ^2.0.17
     hoist-non-react-statics: ^3.3.0
@@ -11833,7 +11851,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: c72c90714567f6db388e6fedfaf1b3e118c82669e01524ce390c3ec4e7c42297aad56c3e0952d203ac80062b5d595fd06b9190ec8a9db82084ab148674fd5e34
+  checksum: f1cb7091c9eddf46d9735faa835c0e9a2425e7eca5d422508980d45cc6c2d4516c6d318fbaebb67c5d1eab33ba2cfe3039465423d6669457781a6ab2c7f65d20
   languageName: node
   linkType: hard
 
