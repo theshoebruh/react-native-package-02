@@ -1,6 +1,6 @@
 {
   "name": "@theshoebruh/react-native-wunderwheel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "an awsome library for react native",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -41,6 +41,7 @@
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lintfix": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "clean": "del-cli lib",
     "prepare": "bob build",
     "release": "release-it"

@@ -1935,9 +1935,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/cli@npm:0.21.5":
-  version: 0.21.5
-  resolution: "@expo/cli@npm:0.21.5"
+"@expo/cli@npm:0.21.6":
+  version: 0.21.6
+  resolution: "@expo/cli@npm:0.21.6"
   dependencies:
     "@0no-co/graphql.web": ^1.0.8
     "@babel/runtime": ^7.20.0
@@ -2012,7 +2012,7 @@ __metadata:
     ws: ^8.12.1
   bin:
     expo-internal: build/bin/cli
-  checksum: e2dee2444589aa6b21dd96b39258127453cb02a60da9fa39dc1544596fe741496fa1fd13be07500cf72138ee826a3a9bd60c9e88f0db77676152c3a3332ea110
+  checksum: c434dad541f665516aaf9a642c6f1075a5f41aa7979d67f815375bbd8f333a878efe21430c66e9f0d570ba84c5239769837cc0601966c880ba4c3144edd2ca90
   languageName: node
   linkType: hard
 
@@ -3405,11 +3405,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.9.0
-  resolution: "@types/node@npm:22.9.0"
+  version: 22.9.1
+  resolution: "@types/node@npm:22.9.1"
   dependencies:
     undici-types: ~6.19.8
-  checksum: c014eb3b8a110f1b87b614a40ef288d13e6b08ae9d5dafbd38951a2eebc24d352dc55330ed9d00c97ee9e64483c3cc14c4aa914c5df7ca7b9eaa1a30b2340dbd
+  checksum: dee25051e8d89f38b2b26c0714ce60acd1e3f9b1b946131ce3c6e64d626a134f1bec2d948f7ead3da0136aeb7672234f066f97f8290e6aead236e43f4ecb5a68
   languageName: node
   linkType: hard
 
@@ -5869,9 +5869,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.41":
-  version: 1.5.62
-  resolution: "electron-to-chromium@npm:1.5.62"
-  checksum: 5b378e7967495faebb27e8d9c7db5ea1477bfdfe13c21bf79eb812df81f0f25ee9acbcbd09eaa17b38287e2b3bc18a762fa654ac40095b23bf0cb71c108a284f
+  version: 1.5.63
+  resolution: "electron-to-chromium@npm:1.5.63"
+  checksum: aa3d0a48753af052158ef3e46d65042b91f1934a4ab02732a0ce27429ba989dea7e4badbf991e58dff8acf5e64b967a964b61985c05ce45e03457c4f917a06f8
   languageName: node
   linkType: hard
 
@@ -6620,15 +6620,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-file-system@npm:~18.0.3":
-  version: 18.0.3
-  resolution: "expo-file-system@npm:18.0.3"
+"expo-file-system@npm:~18.0.4":
+  version: 18.0.4
+  resolution: "expo-file-system@npm:18.0.4"
   dependencies:
     web-streams-polyfill: ^3.3.2
   peerDependencies:
     expo: "*"
     react-native: "*"
-  checksum: f23f507859ccbe03c674014802d885f1513bb60454ab3415c329bd15017eea3df6f5195d136e8cf3cb89f828b26dc8c7023102e19f74897dbeac7b37d00270a4
+  checksum: ac5b433d1664adc1592cc1086bc49b44d5b4d0fd8c5d40d2f5828560c79e3cc8eece5729046ff2302f16347a452f1b82678252dde2c8c8f2e51cbf5df178e36c
   languageName: node
   linkType: hard
 
@@ -6672,12 +6672,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-modules-core@npm:2.0.3":
-  version: 2.0.3
-  resolution: "expo-modules-core@npm:2.0.3"
+"expo-modules-core@npm:2.0.4":
+  version: 2.0.4
+  resolution: "expo-modules-core@npm:2.0.4"
   dependencies:
     invariant: ^2.2.4
-  checksum: 309d0fa68a57c89dd21dc28d3b5fc2133175323e3e02f797b1545833d12ebe556742f3bbac273b9cf87afcecaba2d4047f68fe97760a768885a2cb7bfc01f28e
+  checksum: a347753e6d8f611908f0cfb240f4b46c202cb3df99ccc45c40a7e32b8681e544fc185523b7b2a398c9626bc02610bcb6c2996bf789fb8cee5eaf2e837ffcdcf5
   languageName: node
   linkType: hard
 
@@ -6692,11 +6692,11 @@ __metadata:
   linkType: hard
 
 "expo@npm:~52.0.7":
-  version: 52.0.7
-  resolution: "expo@npm:52.0.7"
+  version: 52.0.8
+  resolution: "expo@npm:52.0.8"
   dependencies:
     "@babel/runtime": ^7.20.0
-    "@expo/cli": 0.21.5
+    "@expo/cli": 0.21.6
     "@expo/config": ~10.0.4
     "@expo/config-plugins": 9.0.9
     "@expo/fingerprint": 0.11.2
@@ -6705,11 +6705,11 @@ __metadata:
     babel-preset-expo: ~12.0.1
     expo-asset: ~11.0.1
     expo-constants: ~17.0.3
-    expo-file-system: ~18.0.3
+    expo-file-system: ~18.0.4
     expo-font: ~13.0.1
     expo-keep-awake: ~14.0.1
     expo-modules-autolinking: 2.0.2
-    expo-modules-core: 2.0.3
+    expo-modules-core: 2.0.4
     fbemitter: ^3.0.0
     web-streams-polyfill: ^3.3.2
     whatwg-url-without-unicode: 8.0.0-3
@@ -6728,7 +6728,7 @@ __metadata:
       optional: true
   bin:
     expo: bin/cli
-  checksum: 5e9d437619e16e46d36cfbf2ab65c6dbee6316d8992162479c766d5a0bd6fbd4b31f954638df7f8101c257fd6fbf368487a298a8d861fa6beab14c0618f3ab4d
+  checksum: 72013bdfa1353996b2a90e861cc59eb047587c5fbb2b5bc335615196327cc6a473773a6a3dcb7ad0bcf573674a8fceed59e61d629d14f8da5b6c56daa055cf38
   languageName: node
   linkType: hard
 
@@ -11841,8 +11841,8 @@ __metadata:
   linkType: hard
 
 "react-native-gesture-handler@npm:^2.21.0":
-  version: 2.21.1
-  resolution: "react-native-gesture-handler@npm:2.21.1"
+  version: 2.21.2
+  resolution: "react-native-gesture-handler@npm:2.21.2"
   dependencies:
     "@egjs/hammerjs": ^2.0.17
     hoist-non-react-statics: ^3.3.0
@@ -11851,7 +11851,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: f1cb7091c9eddf46d9735faa835c0e9a2425e7eca5d422508980d45cc6c2d4516c6d318fbaebb67c5d1eab33ba2cfe3039465423d6669457781a6ab2c7f65d20
+  checksum: 0a42cedb8860a326b465085d0f7622ba03f038b0f0bdd1b1fe5703e58d62cb08bfb82a686c069a1a1410705c2ae0d82971b0449d83796fdd6d071131cf88e68b
   languageName: node
   linkType: hard
 
