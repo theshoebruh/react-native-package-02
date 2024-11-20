@@ -1,12 +1,14 @@
-# react-native-awesome-library
+# react-native-wunderwheel
 
-an awsome library for react native
+A library for react native that allows you to create a wheel of fortune with customizable segments.
 
 ## Installation
 
 ```sh
 npm install react-native-awesome-library
 ```
+
+or if you 
 
 ## Usage
 
