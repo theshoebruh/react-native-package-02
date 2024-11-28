@@ -1,17 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import * as d3Shape from 'd3-shape';
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Animated,
-  Text as RNText,
-} from 'react-native';
+import { StyleSheet, View, Dimensions, Animated } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import Svg, { G, Path, Text } from 'react-native-svg';
+import Svg, { G, Path, ForeignObject } from 'react-native-svg';
 
 const { width } = Dimensions.get('screen');
 
@@ -23,19 +17,28 @@ const oneTurn = 360; // Degrees in a full rotation
 interface WheelSegment {
   path: string | null; // SVG path for the segment
   color: string | undefined; // Segment color
-  value: string | undefined; // Number/text displayed in segment
+  value: G; // Number/text displayed in segment
   centroid: [number, number]; // Center point coordinates of segment
 }
 
+type WunderWheelItem = {
+  value: React.ReactNode;
+  icon?: React.ReactNode; // Make it optional
+  segmentColor: string;
+  fontColor?: string;
+  fontWeight?: string;
+  fontSize?: number;
+  winningFontColor?: string;
+  winningFontWeight?: string;
+  winningFontSize?: number;
+  iconOffset?: number;
+};
+
 interface WunderWheelProps {
-  labels: string[];
-  colors: string[];
+  items: WunderWheelItem[];
   wheelBackgroundColor?: string;
   knobFill?: string;
-  winningColor?: string;
-  winningFontColor?: string;
-  fontColor?: string;
-  fontSize?: number;
+  winningSegmentColor?: string;
   onSpinEnd?: (winner: string, index: number) => void;
   minDeceleration?: number;
   maxDeceleration?: number;
@@ -45,23 +48,16 @@ interface WunderWheelProps {
  *
  */
 export default function WunderWheel({
-  labels,
-  colors,
+  items,
   knobFill,
   wheelBackgroundColor,
-  winningColor,
-  winningFontColor,
-  fontColor,
-  fontSize,
+  winningSegmentColor,
   onSpinEnd,
   minDeceleration,
   maxDeceleration,
 }: WunderWheelProps) {
   // Validate props lengths match
-  if (labels.length !== colors.length) {
-    throw new Error('Labels and colors arrays must have the same length');
-  }
-  const numberOfSegments = labels.length;
+  const numberOfSegments = items.length;
   const angleBySegment = oneTurn / numberOfSegments; // Degrees per segment
   const angleOffset = angleBySegment / 2; // Offset to center segments
   const NUMBER_OF_SEGMENTS = numberOfSegments;
@@ -87,23 +83,22 @@ export default function WunderWheel({
     const data = Array.from({ length: numberOfSegments }).fill(1) as number[];
     const arcs = d3Shape.pie()(data);
     return arcs.map((arc, index) => {
-      const instance = d3Shape
-        .arc()
-        .padAngle(0.01)
-        .outerRadius(width / 2)
-        .innerRadius(20);
+      if (items[index] === undefined) {
+        throw new Error('Items and segments must have the same length');
+      }
+      const instance = d3Shape.arc().outerRadius(width / 2);
       return {
         path: instance({
           ...arc,
-          innerRadius: 60,
           outerRadius: width / 2,
+          innerRadius: 0,
         }),
-        color: colors[index as number],
-        value: labels[index as number],
+        color: items[index].segmentColor,
+        value: items[index].value,
         centroid: instance.centroid({
           ...arc,
-          innerRadius: 60,
           outerRadius: width / 2,
+          innerRadius: 0,
         }) as [number, number],
       };
     });
@@ -194,22 +189,26 @@ export default function WunderWheel({
     );
   };
 
-  // Display the winning number
-  const renderWinner = () => {
-    return <RNText>Winner is: {winner || ''}</RNText>;
-  };
-
   // Render the main wheel component with segments
   const renderSvgWheel = () => {
     return (
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          elevation: 10,
+          shadowColor: 'black',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 2,
+        }}
+      >
         {renderKnob()}
         <Animated.View
           style={{
-            backgroundColor: wheelBackgroundColor || 'black',
+            backgroundColor: wheelBackgroundColor,
             alignItems: 'center',
-            borderRadius: 200,
-            padding: 12,
+            borderRadius: width / 2,
             justifyContent: 'center',
             transform: [
               {
@@ -231,33 +230,66 @@ export default function WunderWheel({
             <G y={width / 2} x={width / 2}>
               {wheelPaths.map((arc, i) => {
                 const [x, y] = arc.centroid;
-                const number = arc.value?.toString() || '';
                 const isWinningSegment = i === winningIndex;
-
+                const item = items[i];
+                if (!item) {
+                  throw new Error(
+                    'Items and segments must have the same length'
+                  );
+                }
                 return (
                   <G key={`arc-${i}`}>
                     <Path
                       d={arc.path || ''}
                       fill={
-                        isWinningSegment ? winningColor || colors[i] : arc.color
+                        isWinningSegment
+                          ? winningSegmentColor || arc.color
+                          : arc.color
                       }
                     />
-                    <Text
-                      x={x}
-                      y={y + 5}
-                      fill={
-                        isWinningSegment
-                          ? winningFontColor || 'black'
-                          : fontColor || 'black'
-                      }
-                      fontWeight="bold"
-                      textAnchor="middle"
-                      fontSize={fontSize || 16}
-                      rotation={i * angleBySegment + angleOffset - 90}
-                      origin={`${x}, ${y}`}
+                    <ForeignObject
+                      x={x + (item.iconOffset || 0)}
+                      y={y - 10}
+                      width={150}
+                      height={40}
+                      transform={`rotate(${(i * angleBySegment + angleOffset + 90) % 360}, ${x}, ${y})`}
                     >
-                      {number}
-                    </Text>
+                      {item.icon &&
+                        React.cloneElement(item.icon as React.ReactElement, {
+                          style: {
+                            width: '100%',
+                            height: '100%',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: isWinningSegment
+                              ? item.winningFontColor || 'black'
+                              : item.fontColor || 'black',
+                          },
+                        })}
+                    </ForeignObject>
+                    <ForeignObject
+                      x={x - 90}
+                      y={y - 15}
+                      width={150}
+                      height={40}
+                      transform={`rotate(${(i * angleBySegment + angleOffset + 90) % 360}, ${x}, ${y})`}
+                    >
+                      {React.cloneElement(item.value as React.ReactElement, {
+                        style: {
+                          width: '100%',
+                          height: '100%',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'flex-start',
+                          fontWeight: item.fontWeight || 'normal',
+                          fontSize: item.fontSize || 16,
+                          color: isWinningSegment
+                            ? item.winningFontColor || 'black'
+                            : item.fontColor || 'black',
+                        },
+                      })}
+                    </ForeignObject>
                   </G>
                 );
               })}
@@ -271,10 +303,7 @@ export default function WunderWheel({
   // Main render with gesture handler for spinning
   return (
     <PanGestureHandler onHandlerStateChange={onPan} enabled={enabled}>
-      <View style={styles.container}>
-        {renderSvgWheel()}
-        {renderWinner()}
-      </View>
+      <View style={styles.container}>{renderSvgWheel()}</View>
     </PanGestureHandler>
   );
 }
