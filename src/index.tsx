@@ -21,7 +21,7 @@ interface WheelSegment {
   centroid: [number, number]; // Center point coordinates of segment
 }
 
-type WunderWheelItem = {
+export type WunderWheelItem = {
   value: React.ReactNode;
   icon?: React.ReactNode; // Make it optional
   segmentColor: string;
@@ -322,3 +322,4 @@ const styles = StyleSheet.create({
     bottom: 10,
   },
 });
+
