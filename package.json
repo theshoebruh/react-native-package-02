@@ -65,25 +65,36 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
     "@commitlint/config-conventional": "^17.0.2",
+    "@eslint/js": "^9.16.0",
     "@evilmartians/lefthook": "^1.5.0",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^9.0.2",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.9.0",
     "@types/d3-shape": "^3.1.6",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
+    "babel-jest": "^29.7.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.1.0",
-    "eslint": "^8.51.0",
+    "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.37.2",
     "jest": "^29.7.0",
     "prettier": "^3.0.3",
     "react": "18.3.1",
     "react-native": "0.76.2",
     "react-native-builder-bob": "^0.32.1",
+    "react-native-gesture-handler": "^2.21.2",
+    "react-native-svg": "^15.9.0",
+    "react-test-renderer": "^18.3.1",
     "release-it": "^17.10.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^8.16.0"
   },
   "resolutions": {
     "@types/react": "^18.2.44"
@@ -98,13 +109,6 @@
     "example"
   ],
   "packageManager": "yarn@3.6.1",
-  "jest": {
-    "preset": "react-native",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ]
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -125,26 +129,6 @@
       "@release-it/conventional-changelog": {
         "preset": "angular"
       }
-    }
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@react-native",
-      "prettier"
-    ],
-    "rules": {
-      "react/react-in-jsx-scope": "off",
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "es5",
-          "useTabs": false
-        }
-      ]
     }
   },
   "eslintIgnore": [
