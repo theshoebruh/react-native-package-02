@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 import * as d3Shape from 'd3-shape';
-import { StyleSheet, View, Dimensions, Animated } from 'react-native';
+import { StyleSheet, View, Dimensions, Animated, Text } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Svg, { G, Path, ForeignObject } from 'react-native-svg';
 
@@ -17,7 +17,7 @@ const oneTurn = 360; // Degrees in a full rotation
 interface WheelSegment {
   path: string | null; // SVG path for the segment
   color: string | undefined; // Segment color
-  value: G; // Number/text displayed in segment
+  value: React.ReactNode; // Number/text displayed in segment
   centroid: [number, number]; // Center point coordinates of segment
 }
 
@@ -31,6 +31,7 @@ export type WunderWheelItem = {
   winningFontColor?: string;
   winningFontWeight?: string;
   winningFontSize?: number;
+  winningString?: string;
   iconOffset?: number;
 };
 
@@ -56,6 +57,12 @@ export default function WunderWheel({
   minDeceleration,
   maxDeceleration,
 }: WunderWheelProps) {
+  // Add validation at the start of the component
+  if (!items || items.length === 0) {
+    console.warn('WunderWheel: No items provided');
+    return null;
+  }
+
   // Validate props lengths match
   const numberOfSegments = items.length;
   const angleBySegment = oneTurn / numberOfSegments; // Degrees per segment
@@ -66,7 +73,6 @@ export default function WunderWheel({
   const angleRef = useRef(new Animated.Value(0)).current; // Track rotation angle
   const [enabled, setEnabled] = useState(true); // Enable/disable wheel spinning
   const [isFinished, setIsFinished] = useState(false); // Track spin completion
-  const [winner, setWinner] = useState<string | null>(null); // Store winning number
   const [currentRotation, setCurrentRotation] = useState<number>(0); // Current wheel rotation
   const [winningIndex, setWinningIndex] = useState<number | null>(null); // Index of winning segment
 
@@ -80,8 +86,19 @@ export default function WunderWheel({
 
   // Creates the wheel segments using D3 for SVG path generation
   const makeWheel = (): WheelSegment[] => {
+    // Guard against empty or invalid input
+    if (!numberOfSegments || numberOfSegments <= 0 || !items.length) {
+      return [];
+    }
+
     const data = Array.from({ length: numberOfSegments }).fill(1) as number[];
     const arcs = d3Shape.pie()(data);
+    
+    // Verify that arcs is valid before mapping
+    if (!arcs || !Array.isArray(arcs)) {
+      return [];
+    }
+
     return arcs.map((arc, index) => {
       if (items[index] === undefined) {
         throw new Error('Items and segments must have the same length');
@@ -116,7 +133,6 @@ export default function WunderWheel({
         numberOfSegments;
 
       // Update state with winner
-      setWinner(wheelPaths[winningSegmentIndex]?.value?.toString() || null);
       setWinningIndex(winningSegmentIndex);
       setEnabled(true);
       setIsFinished(false);
@@ -132,6 +148,8 @@ export default function WunderWheel({
     SEGMENT_ANGLE,
     numberOfSegments,
     onSpinEnd,
+    items,
+    winningIndex,
   ]);
 
   // Creates the wheel segments using D3 for SVG path generation
@@ -141,7 +159,6 @@ export default function WunderWheel({
     if (nativeEvent.state === State.END) {
       // Reset states for new spin
       setEnabled(false);
-      setWinner(null);
       setWinningIndex(null);
       const randomBetween =
         Math.random() * (minDeceleration || 0.99 - (maxDeceleration || 0.98)) +
@@ -167,6 +184,7 @@ export default function WunderWheel({
 
     return (
       <View
+        testID="wheel-knob-container"
         style={{
           width: knobSize,
           height: knobSize * 2,
@@ -175,12 +193,14 @@ export default function WunderWheel({
         }}
       >
         <Svg
+          testID="wheel-knob"
           width={knobSize}
           height={(knobSize * 100) / 57}
           viewBox="0 0 57 100"
           style={{ transform: [{ translateY: 8 }] }}
         >
           <Path
+            testID="wheel-knob-path"
             d="M28.034,0C12.552,0,0,12.552,0,28.034S28.034,100,28.034,100s28.034-56.483,28.034-71.966S43.517,0,28.034,0z   M28.034,40.477c-6.871,0-12.442-5.572-12.442-12.442c0-6.872,5.571-12.442,12.442-12.442c6.872,0,12.442,5.57,12.442,12.442  C40.477,34.905,34.906,40.477,28.034,40.477z"
             fill={knobFill}
           />
@@ -193,6 +213,7 @@ export default function WunderWheel({
   const renderSvgWheel = () => {
     return (
       <View
+        testID="wheel-svg-container"
         style={{
           justifyContent: 'center',
           alignItems: 'center',
@@ -205,6 +226,7 @@ export default function WunderWheel({
       >
         {renderKnob()}
         <Animated.View
+          testID="wheel-animated-container"
           style={{
             backgroundColor: wheelBackgroundColor,
             alignItems: 'center',
@@ -238,16 +260,19 @@ export default function WunderWheel({
                   );
                 }
                 return (
-                  <G key={`arc-${i}`}>
+                  <G key={`arc-${i}`} testID={`wheel-segment-${i}`}>
                     <Path
+                      testID={`wheel-segment-path-${i}`}
                       d={arc.path || ''}
                       fill={
                         isWinningSegment
                           ? winningSegmentColor || arc.color
                           : arc.color
                       }
+                      data-winning={isWinningSegment}
                     />
                     <ForeignObject
+                      testID={`wheel-segment-value-${i}`}
                       x={x + (item.iconOffset || 0)}
                       y={y - 10}
                       width={150}
@@ -300,10 +325,17 @@ export default function WunderWheel({
     );
   };
 
-  // Main render with gesture handler for spinning
+  // Main render with gesture handler for spinning and winner display
   return (
     <PanGestureHandler onHandlerStateChange={onPan} enabled={enabled}>
-      <View style={styles.container}>{renderSvgWheel()}</View>
+      <View style={styles.container}>
+        {renderSvgWheel()}
+        {winningIndex !== null && (
+          <Text style={styles.winnerText}>
+            Winner: {items[winningIndex]?.winningString}
+          </Text>
+        )}
+      </View>
     </PanGestureHandler>
   );
 }
@@ -322,4 +354,3 @@ const styles = StyleSheet.create({
     bottom: 10,
   },
 });
-
