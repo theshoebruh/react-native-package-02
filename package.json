@@ -1,6 +1,6 @@
 {
   "name": "@theshoebruh/react-native-wunderwheel",
-  "version": "0.1.8",
+  "version": "0.2.12",
   "description": "A library for react native that allows you to create a wheel of fortune with customizable segments.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",

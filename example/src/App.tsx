@@ -176,7 +176,7 @@ export default function App() {
     <GestureHandlerRootView style={styles.container}>
       <WunderWheel
         items={items}
-        onSpinEnd={(winner) => Alert.alert('Winner', winner)}
+        onSpinEnd={(winner: string) => Alert.alert('Winner', winner)}
       />
     </GestureHandlerRootView>
   );
@@ -185,6 +185,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

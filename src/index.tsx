@@ -217,11 +217,6 @@ export default function WunderWheel({
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-          elevation: 10,
-          shadowColor: 'black',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.8,
-          shadowRadius: 2,
         }}
       >
         {renderKnob()}
@@ -328,14 +323,7 @@ export default function WunderWheel({
   // Main render with gesture handler for spinning and winner display
   return (
     <PanGestureHandler onHandlerStateChange={onPan} enabled={enabled}>
-      <View style={styles.container}>
-        {renderSvgWheel()}
-        {winningIndex !== null && (
-          <Text style={styles.winnerText}>
-            Winner: {items[winningIndex]?.winningString}
-          </Text>
-        )}
-      </View>
+      {renderSvgWheel()}
     </PanGestureHandler>
   );
 }
