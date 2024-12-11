@@ -1,8 +1,7 @@
-import React from 'react';
-
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, act, waitFor } from '@testing-library/react-native';
 import WunderWheel, { type WunderWheelItem } from '../index';
 import { Text } from 'react-native';
+import { State } from 'react-native-gesture-handler';
 
 const mockItems: WunderWheelItem[] = [
   {
@@ -37,27 +36,56 @@ describe('WunderWheel Component', () => {
     ).not.toThrow();
   });
 
-  it('passes correct props to wheel', () => {
-    const customBgColor = '#123456';
-    const customKnobFill = '#654321';
-    const { root } = render(
-      <WunderWheel
-        items={mockItems}
-        wheelBackgroundColor={customBgColor}
-        knobFill={customKnobFill}
-      />
+  it('calls onSpinEnd when the wheel stops', async () => {
+    const onSpinEndMock = jest.fn();
+    const { getByTestId } = render(
+      <WunderWheel items={mockItems} onSpinEnd={onSpinEndMock} />
     );
-    expect(root).toBeTruthy();
+  
+    const wheel = getByTestId('wheel-svg-container');
+  
+    act(() => {
+      fireEvent(wheel, 'onHandlerStateChange', {
+        nativeEvent: {
+          state: State.BEGAN,
+          velocityY: 100,
+        },
+      });
+    });
+
+    act(() => {
+      fireEvent(wheel, 'onHandlerStateChange', {
+        nativeEvent: {
+          state: State.END,
+          velocityY: 0,
+        },
+      });
+    });
+
+    await waitFor(() => {
+      expect(onSpinEndMock).toHaveBeenCalled();
+    });
   });
 
-  it('responds to pan gesture', () => {
-    const { getByTestId, root } = render(<WunderWheel items={mockItems} />);
+  it('does not call onSpinEnd when the wheel is spinning', async () => {
+    const onSpinEndMock = jest.fn();
+    const { getByTestId } = render(
+      <WunderWheel items={mockItems} onSpinEnd={onSpinEndMock} />
+    );
+  
     const wheel = getByTestId('wheel-svg-container');
-    fireEvent(wheel, 'onHandlerStateChange', {
-      nativeEvent: {
-        state: 2,
-      },
+  
+    act(() => {
+      fireEvent(wheel, 'onHandlerStateChange', {
+        nativeEvent: {
+          state: State.BEGAN,
+          velocityY: 100,
+        },
+      });
     });
-    expect(root).toBeTruthy();
+
+    await waitFor(() => {
+      expect(onSpinEndMock).not.toHaveBeenCalled();
+    });
   });
 });
